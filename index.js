@@ -1,8 +1,14 @@
 const gameBoard = (() => {
   const squares = ['X', 'X', 'X', 'O', 'O', 'O', 'X', 'X', 'X'];
 
+  const addMark = (index, mark) => {
+    squares[index] = mark;
+    console.log(squares);
+  };
+
   return {
     squares,
+    addMark,
   };
 })();
 
@@ -36,3 +42,5 @@ console.log(player1.name);
 console.log(player2.name);
 
 displayController.render();
+
+gameBoard.addMark(0, 'O');
