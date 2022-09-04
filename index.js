@@ -1,9 +1,19 @@
 const gameBoard = (() => {
-  const squares = [];
+  const squares = ['X', 'X', 'X', 'O', 'O', 'O', 'X', 'X', 'X'];
 })();
 
 const gameController = (() => {
   const turns = 0;
+})();
+
+const displaycController = (() => {
+  let render = () => {
+    console.log('render');
+  };
+
+  return {
+    render,
+  };
 })();
 
 const player = (name) => {
