@@ -10,10 +10,12 @@ const gameController = (() => {
   const turns = 0;
 })();
 
-const displaycController = (() => {
+const displayController = (() => {
   let render = () => {
-    gameBoard.squares.forEach((element) => {
-      console.log(element);
+    const squares = document.querySelectorAll('.square');
+    squares.forEach((element) => {
+      element.textContent =
+        gameBoard.squares[Array.from(squares).indexOf(element)];
     });
   };
 
@@ -33,4 +35,4 @@ const player2 = player('Player 2');
 console.log(player1.name);
 console.log(player2.name);
 
-displaycController.render();
+displayController.render();
