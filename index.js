@@ -1,9 +1,9 @@
 const gameBoard = (() => {
-  const squares = ['X', 'X', 'X', 'O', 'O', 'O', 'X', 'X', 'X'];
+  // const squares = ['X', 'X', 'X', 'O', 'O', 'O', 'X', 'X', 'X'];
+  const squares = [null, null, null, null, null, null, null, null, null];
 
   const addMark = (index, mark) => {
     squares[index] = mark;
-    gameController.incrementTurns();
     displayController.render();
   };
 
@@ -14,10 +14,15 @@ const gameBoard = (() => {
 })();
 
 const gameController = (() => {
-  let turns = 0;
+  let turn = 0;
 
-  const incrementTurns = () => {
-    turns += 1;
+  const incrementTurn = () => {
+    turn += 1;
+  };
+
+  const setupGame = () => {
+    turn = 0;
+    setupListeners();
   };
 
   const setupListeners = () => {
@@ -25,14 +30,16 @@ const gameController = (() => {
     squares.forEach((element) => {
       element.addEventListener('click', (event) => {
         console.log(event.target);
-        // gameBoard.addMark();
+        incrementTurn();
+        const mark = turn % 2 === 0 ? 'O' : 'X';
+        const index = Array.from(squares).indexOf(element);
+        gameBoard.addMark(index, mark);
       });
     });
   };
 
   return {
-    incrementTurns,
-    setupListeners,
+    setupGame,
   };
 })();
 
@@ -61,7 +68,7 @@ const player2 = player('Player 2');
 console.log(player1.name);
 console.log(player2.name);
 
-gameController.setupListeners();
+gameController.setupGame();
 displayController.render();
 
-gameBoard.addMark(0, 'O');
+// gameBoard.addMark(0, 'O');
