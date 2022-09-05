@@ -3,7 +3,7 @@ const gameBoard = (() => {
 
   const addMark = (index, mark) => {
     squares[index] = mark;
-    console.log(squares);
+    gameController.incrementTurns();
     displayController.render();
   };
 
@@ -14,11 +14,30 @@ const gameBoard = (() => {
 })();
 
 const gameController = (() => {
-  const turns = 0;
+  let turns = 0;
+
+  const incrementTurns = () => {
+    turns += 1;
+  };
+
+  const setupListeners = () => {
+    const squares = document.querySelectorAll('.square');
+    squares.forEach((element) => {
+      element.addEventListener('click', (event) => {
+        console.log(event.target);
+        // gameBoard.addMark();
+      });
+    });
+  };
+
+  return {
+    incrementTurns,
+    setupListeners,
+  };
 })();
 
 const displayController = (() => {
-  let render = () => {
+  const render = () => {
     const squares = document.querySelectorAll('.square');
     squares.forEach((element) => {
       element.textContent =
@@ -42,6 +61,7 @@ const player2 = player('Player 2');
 console.log(player1.name);
 console.log(player2.name);
 
+gameController.setupListeners();
 displayController.render();
 
 gameBoard.addMark(0, 'O');
