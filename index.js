@@ -2,7 +2,16 @@ const gameBoard = (() => {
   // const squares = ['X', 'X', 'X', 'O', 'O', 'O', 'X', 'X', 'X'];
   const squares = [null, null, null, null, null, null, null, null, null];
 
+  const isSquareTaken = (index) => {
+    return squares[index] !== null;
+  };
+
   const addMark = (index, mark) => {
+    if (isSquareTaken(index)) {
+      console.log('square is taken, returning');
+      return;
+    }
+    console.log('here');
     squares[index] = mark;
     displayController.render();
   };
