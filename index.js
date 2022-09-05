@@ -14,7 +14,13 @@ const gameBoard = (() => {
     // console.log(`squares: ${squares}`);
   };
 
-  const addMark = (index, mark) => {
+  const toggleSquaresMarked = (elementArray) => {
+    elementArray.forEach((element) => {
+      element.classList.toggle('marked');
+    });
+  };
+
+  const addMark = (index, mark, element) => {
     if (isSquareTaken(index)) {
       console.log('Square is taken, returning');
       return;
@@ -31,6 +37,7 @@ const gameBoard = (() => {
     getSquares,
     addMark,
     reset,
+    toggleSquaresMarked,
   };
 })();
 
@@ -38,6 +45,7 @@ const gameController = (() => {
   let turn = 1;
   const marks = ['X', 'O'];
   const squareElements = Array.from(document.querySelectorAll('.square'));
+  let winningLineElements = [];
 
   const getTurn = () => turn;
 
@@ -48,6 +56,7 @@ const gameController = (() => {
 
   const resetTurn = () => {
     turn = 1;
+    // winningLineElements = [];
   };
 
   const isWinningRow = () => {
@@ -57,23 +66,24 @@ const gameController = (() => {
     ];
 
     for (let index = 0; index < wins.length; index++) {
-      // console.log(`top row: ${gameBoard.getSquares().slice(0, 3)}`);
-      // console.log(`current check: ${wins[index]}`);
+      let row = gameBoard.getSquares().slice(0, 3);
+      if (row.toString() === wins[index].toString()) {
+        winningLineElements = squareElements.slice(0, 3);
+        gameBoard.toggleSquaresMarked(winningLineElements);
+        return true;
+      }
 
-      if (
-        gameBoard.getSquares().slice(0, 3).toString() === wins[index].toString()
-      ) {
-        // console.log('win top row');
+      row = gameBoard.getSquares().slice(3, 6);
+      if (row.toString() === wins[index].toString()) {
+        winningLineElements = squareElements.slice(3, 6);
+        gameBoard.toggleSquaresMarked(winningLineElements);
         return true;
       }
-      if (
-        gameBoard.getSquares().slice(3, 6).toString() === wins[index].toString()
-      ) {
-        return true;
-      }
-      if (
-        gameBoard.getSquares().slice(6, 9).toString() === wins[index].toString()
-      ) {
+
+      row = gameBoard.getSquares().slice(6, 9);
+      if (row.toString() === wins[index].toString()) {
+        winningLineElements = squareElements.slice(6, 9);
+        gameBoard.toggleSquaresMarked(winningLineElements);
         return true;
       }
     }
@@ -82,27 +92,43 @@ const gameController = (() => {
 
   const isWinningColumn = () => {
     let win = false;
-    marks.forEach((element) => {
+    marks.forEach((mark) => {
       if (
-        gameBoard.getSquares().at(0) === element &&
-        gameBoard.getSquares().at(3) === element &&
-        gameBoard.getSquares().at(6) === element
+        gameBoard.getSquares().at(0) === mark &&
+        gameBoard.getSquares().at(3) === mark &&
+        gameBoard.getSquares().at(6) === mark
       ) {
         win = true;
-      }
-      if (
-        gameBoard.getSquares().at(1) === element &&
-        gameBoard.getSquares().at(4) === element &&
-        gameBoard.getSquares().at(7) === element
+        winningLineElements = [
+          squareElements[0],
+          squareElements[3],
+          squareElements[6],
+        ];
+        gameBoard.toggleSquaresMarked(winningLineElements);
+      } else if (
+        gameBoard.getSquares().at(1) === mark &&
+        gameBoard.getSquares().at(4) === mark &&
+        gameBoard.getSquares().at(7) === mark
       ) {
         win = true;
-      }
-      if (
-        gameBoard.getSquares().at(2) === element &&
-        gameBoard.getSquares().at(5) === element &&
-        gameBoard.getSquares().at(8) === element
+        winningLineElements = [
+          squareElements[1],
+          squareElements[4],
+          squareElements[7],
+        ];
+        gameBoard.toggleSquaresMarked(winningLineElements);
+      } else if (
+        gameBoard.getSquares().at(2) === mark &&
+        gameBoard.getSquares().at(5) === mark &&
+        gameBoard.getSquares().at(8) === mark
       ) {
         win = true;
+        winningLineElements = [
+          squareElements[2],
+          squareElements[5],
+          squareElements[8],
+        ];
+        gameBoard.toggleSquaresMarked(winningLineElements);
       }
     });
     return win;
@@ -110,20 +136,31 @@ const gameController = (() => {
 
   const isWinningDiagonal = () => {
     let win = false;
-    marks.forEach((element) => {
+    marks.forEach((mark) => {
       if (
-        gameBoard.getSquares().at(0) === element &&
-        gameBoard.getSquares().at(4) === element &&
-        gameBoard.getSquares().at(8) === element
+        gameBoard.getSquares().at(0) === mark &&
+        gameBoard.getSquares().at(4) === mark &&
+        gameBoard.getSquares().at(8) === mark
       ) {
         win = true;
-      }
-      if (
-        gameBoard.getSquares().at(2) === element &&
-        gameBoard.getSquares().at(4) === element &&
-        gameBoard.getSquares().at(6) === element
+        winningLineElements = [
+          squareElements[0],
+          squareElements[4],
+          squareElements[8],
+        ];
+        gameBoard.toggleSquaresMarked(winningLineElements);
+      } else if (
+        gameBoard.getSquares().at(2) === mark &&
+        gameBoard.getSquares().at(4) === mark &&
+        gameBoard.getSquares().at(6) === mark
       ) {
         win = true;
+        winningLineElements = [
+          squareElements[2],
+          squareElements[4],
+          squareElements[6],
+        ];
+        gameBoard.toggleSquaresMarked(winningLineElements);
       }
     });
     return win;
@@ -150,6 +187,7 @@ const gameController = (() => {
     setTimeout(() => {
       displayController.render();
       addListeners();
+      gameBoard.toggleSquaresMarked(winningLineElements);
     }, 2000);
   };
 
@@ -176,7 +214,7 @@ const gameController = (() => {
     console.log(`turn: ${turn}`);
     const mark = turn % 2 === 0 ? 'O' : 'X';
     const index = Array.from(squareElements).indexOf(event.target);
-    gameBoard.addMark(index, mark);
+    gameBoard.addMark(index, mark, event.target);
 
     if (isGameOver()) {
       console.log(`${mark} wins!`);
