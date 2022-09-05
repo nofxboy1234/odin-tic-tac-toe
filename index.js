@@ -9,10 +9,9 @@ const gameBoard = (() => {
   };
 
   const reset = () => {
-    console.log('reset');
+    // console.log('reset');
     squares = [null, null, null, null, null, null, null, null, null];
-    console.log(`squares: ${squares}`);
-    // displayController.render();
+    // console.log(`squares: ${squares}`);
   };
 
   const addMark = (index, mark) => {
@@ -22,8 +21,10 @@ const gameBoard = (() => {
     }
     console.log('Marking square');
     squares[index] = mark;
+    gameController.incrementTurn();
     displayController.render();
-    console.log(squares);
+
+    // console.log(squares);
   };
 
   return {
@@ -34,17 +35,19 @@ const gameBoard = (() => {
 })();
 
 const gameController = (() => {
-  let turn = 0;
+  let turn = 1;
   const marks = ['X', 'O'];
+  const squareElements = Array.from(document.querySelectorAll('.square'));
+
+  const getTurn = () => turn;
 
   const incrementTurn = () => {
     turn += 1;
-    console.log(`turn: ${turn}`);
+    // console.log(`turn: ${turn}`);
   };
 
-  const setupGame = () => {
-    turn = 0;
-    setupListeners();
+  const resetTurn = () => {
+    turn = 1;
   };
 
   const isWinningRow = () => {
@@ -85,7 +88,6 @@ const gameController = (() => {
         gameBoard.getSquares().at(3) === element &&
         gameBoard.getSquares().at(6) === element
       ) {
-        console.log('col 1 win');
         win = true;
       }
       if (
@@ -127,42 +129,77 @@ const gameController = (() => {
     return win;
   };
 
-  const isGameOver = () => {
-    console.log('isGameOver');
-    return isWinningRow() || isWinningColumn() || isWinningDiagonal();
+  const isTie = () => {
+    if (turn === 9) {
+      return true;
+    }
+    return false;
   };
 
-  const setupListeners = () => {
-    const squares = document.querySelectorAll('.square');
-    squares.forEach((element) => {
-      element.addEventListener('click', (event) => {
-        incrementTurn();
-        const mark = turn % 2 === 0 ? 'O' : 'X';
-        const index = Array.from(squares).indexOf(element);
-        gameBoard.addMark(index, mark);
+  const isGameOver = () => {
+    // console.log('isGameOver');
+    return (
+      isWinningRow() || isWinningColumn() || isWinningDiagonal() || isTie()
+    );
+  };
 
-        if (isGameOver()) {
-          console.log(`${mark} wins!`);
+  const endGame = () => {
+    gameBoard.reset();
+    resetTurn();
+    removeListeners();
+    setTimeout(() => {
+      displayController.render();
+      addListeners();
+    }, 2000);
+  };
 
-          gameBoard.reset();
-          turn = 0;
-          displayController.render();
-        }
-      });
+  const removeListeners = () => {
+    console.log('removeListeners');
+
+    squareElements.forEach((element) => {
+      // console.log(element);
+      element.removeEventListener('click', playTurn);
     });
   };
 
+  const addListeners = () => {
+    console.log('addListeners');
+
+    squareElements.forEach((element) => {
+      // console.log(element);
+      element.addEventListener('click', playTurn);
+    });
+  };
+
+  const playTurn = (event) => {
+    // incrementTurn();
+    console.log(`turn: ${turn}`);
+    const mark = turn % 2 === 0 ? 'O' : 'X';
+    const index = Array.from(squareElements).indexOf(event.target);
+    gameBoard.addMark(index, mark);
+
+    if (isGameOver()) {
+      console.log(`${mark} wins!`);
+      endGame();
+    } else if (isTie()) {
+      console.log('Game is tied');
+      endGame();
+    }
+  };
+
   return {
-    setupGame,
+    getTurn,
+    addListeners,
+    incrementTurn,
   };
 })();
 
 const displayController = (() => {
   const render = () => {
-    console.log('displayController.render');
+    // console.log('displayController.render');
     const squares = document.querySelectorAll('.square');
     squares.forEach((element) => {
-      console.log(`gameBoard.getSquares(): ${gameBoard.getSquares()}`);
+      // console.log(`gameBoard.getSquares(): ${gameBoard.getSquares()}`);
       element.textContent =
         gameBoard.getSquares()[Array.from(squares).indexOf(element)];
     });
@@ -181,10 +218,6 @@ const player = (name) => {
 
 const player1 = player('Player 1');
 const player2 = player('Player 2');
-// console.log(player1.name);
-// console.log(player2.name);
 
-gameController.setupGame();
+gameController.addListeners();
 displayController.render();
-
-// gameBoard.addMark(0, 'O');
