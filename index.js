@@ -4,6 +4,7 @@ const gameBoard = (() => {
   const addMark = (index, mark) => {
     squares[index] = mark;
     console.log(squares);
+    displayController.render();
   };
 
   return {
