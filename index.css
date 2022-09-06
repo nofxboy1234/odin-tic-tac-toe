@@ -4,6 +4,13 @@
   box-sizing: border-box;
 }
 
+.main-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
 .gameboard {
   display: grid;
   grid-template-columns: repeat(3, 100px);
