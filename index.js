@@ -49,6 +49,7 @@ const gameController = (() => {
   let turn = 0;
   const markSymbols = ['X', 'O'];
   const squareElements = Array.from(document.querySelectorAll('.square'));
+  const restartButton = document.querySelector('#restart-game');
   let winningLineElements = [];
 
   const getTurn = () => turn;
@@ -211,6 +212,8 @@ const gameController = (() => {
       // console.log(element);
       element.addEventListener('click', playTurn);
     });
+
+    restartButton.addEventListener('click', restartGame);
   };
 
   const playTurn = (event) => {
