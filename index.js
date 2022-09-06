@@ -238,6 +238,7 @@ const gameController = (() => {
     } else if (isTie()) {
       console.log('Game is tied');
       endGame();
+      winnerElement.textContent = 'Game is tied!';
     }
   };
 
