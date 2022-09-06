@@ -1,5 +1,5 @@
 const gameBoard = (() => {
-  let squareMarks = [null, null, null, null, null, null, null, null, null];
+  let squareMarks = Array(9).fill(null);
 
   const getSquareMarks = () => squareMarks;
 
@@ -8,7 +8,7 @@ const gameBoard = (() => {
   };
 
   const reset = () => {
-    squareMarks = [null, null, null, null, null, null, null, null, null];
+    squareMarks = Array(9).fill(null);
   };
 
   const toggleSquaresMarked = (elementArray) => {
