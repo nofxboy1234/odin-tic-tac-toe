@@ -1,16 +1,16 @@
 const gameBoard = (() => {
   // const squares = ['X', 'X', 'X', 'O', 'O', 'O', 'X', 'X', 'X'];
-  let squares = [null, null, null, null, null, null, null, null, null];
+  let squareMarks = [null, null, null, null, null, null, null, null, null];
 
-  const getSquares = () => squares;
+  const getSquareMarks = () => squareMarks;
 
   const isSquareTaken = (index) => {
-    return squares[index] !== null;
+    return squareMarks[index] !== null;
   };
 
   const reset = () => {
     // console.log('reset');
-    squares = [null, null, null, null, null, null, null, null, null];
+    squareMarks = [null, null, null, null, null, null, null, null, null];
     // console.log(`squares: ${squares}`);
   };
 
@@ -20,21 +20,22 @@ const gameBoard = (() => {
     });
   };
 
-  const addMark = (index, mark, element) => {
+  const addMark = (index) => {
     if (isSquareTaken(index)) {
       console.log('Square is taken, returning');
       return;
     }
     console.log('Marking square');
-    squares[index] = mark;
     gameController.incrementTurn();
+    const mark = gameController.getTurn() % 2 === 0 ? 'O' : 'X';
+    squareMarks[index] = mark;
     displayController.render();
 
-    // console.log(squares);
+    return mark;
   };
 
   return {
-    getSquares,
+    getSquareMarks,
     addMark,
     reset,
     toggleSquaresMarked,
@@ -42,8 +43,8 @@ const gameBoard = (() => {
 })();
 
 const gameController = (() => {
-  let turn = 1;
-  const marks = ['X', 'O'];
+  let turn = 0;
+  const markSymbols = ['X', 'O'];
   const squareElements = Array.from(document.querySelectorAll('.square'));
   let winningLineElements = [];
 
@@ -51,11 +52,11 @@ const gameController = (() => {
 
   const incrementTurn = () => {
     turn += 1;
-    // console.log(`turn: ${turn}`);
+    console.log(`turn: ${getTurn()}`);
   };
 
   const resetTurn = () => {
-    turn = 1;
+    turn = 0;
     // winningLineElements = [];
   };
 
@@ -66,22 +67,22 @@ const gameController = (() => {
     ];
 
     for (let index = 0; index < wins.length; index++) {
-      let row = gameBoard.getSquares().slice(0, 3);
-      if (row.toString() === wins[index].toString()) {
+      let marksRow = gameBoard.getSquareMarks().slice(0, 3);
+      if (marksRow.toString() === wins[index].toString()) {
         winningLineElements = squareElements.slice(0, 3);
         gameBoard.toggleSquaresMarked(winningLineElements);
         return true;
       }
 
-      row = gameBoard.getSquares().slice(3, 6);
-      if (row.toString() === wins[index].toString()) {
+      marksRow = gameBoard.getSquareMarks().slice(3, 6);
+      if (marksRow.toString() === wins[index].toString()) {
         winningLineElements = squareElements.slice(3, 6);
         gameBoard.toggleSquaresMarked(winningLineElements);
         return true;
       }
 
-      row = gameBoard.getSquares().slice(6, 9);
-      if (row.toString() === wins[index].toString()) {
+      marksRow = gameBoard.getSquareMarks().slice(6, 9);
+      if (marksRow.toString() === wins[index].toString()) {
         winningLineElements = squareElements.slice(6, 9);
         gameBoard.toggleSquaresMarked(winningLineElements);
         return true;
@@ -92,11 +93,11 @@ const gameController = (() => {
 
   const isWinningColumn = () => {
     let win = false;
-    marks.forEach((mark) => {
+    markSymbols.forEach((markSymbol) => {
       if (
-        gameBoard.getSquares().at(0) === mark &&
-        gameBoard.getSquares().at(3) === mark &&
-        gameBoard.getSquares().at(6) === mark
+        gameBoard.getSquareMarks().at(0) === markSymbol &&
+        gameBoard.getSquareMarks().at(3) === markSymbol &&
+        gameBoard.getSquareMarks().at(6) === markSymbol
       ) {
         win = true;
         winningLineElements = [
@@ -106,9 +107,9 @@ const gameController = (() => {
         ];
         gameBoard.toggleSquaresMarked(winningLineElements);
       } else if (
-        gameBoard.getSquares().at(1) === mark &&
-        gameBoard.getSquares().at(4) === mark &&
-        gameBoard.getSquares().at(7) === mark
+        gameBoard.getSquareMarks().at(1) === markSymbol &&
+        gameBoard.getSquareMarks().at(4) === markSymbol &&
+        gameBoard.getSquareMarks().at(7) === markSymbol
       ) {
         win = true;
         winningLineElements = [
@@ -118,9 +119,9 @@ const gameController = (() => {
         ];
         gameBoard.toggleSquaresMarked(winningLineElements);
       } else if (
-        gameBoard.getSquares().at(2) === mark &&
-        gameBoard.getSquares().at(5) === mark &&
-        gameBoard.getSquares().at(8) === mark
+        gameBoard.getSquareMarks().at(2) === markSymbol &&
+        gameBoard.getSquareMarks().at(5) === markSymbol &&
+        gameBoard.getSquareMarks().at(8) === markSymbol
       ) {
         win = true;
         winningLineElements = [
@@ -136,11 +137,11 @@ const gameController = (() => {
 
   const isWinningDiagonal = () => {
     let win = false;
-    marks.forEach((mark) => {
+    markSymbols.forEach((mark) => {
       if (
-        gameBoard.getSquares().at(0) === mark &&
-        gameBoard.getSquares().at(4) === mark &&
-        gameBoard.getSquares().at(8) === mark
+        gameBoard.getSquareMarks().at(0) === mark &&
+        gameBoard.getSquareMarks().at(4) === mark &&
+        gameBoard.getSquareMarks().at(8) === mark
       ) {
         win = true;
         winningLineElements = [
@@ -150,9 +151,9 @@ const gameController = (() => {
         ];
         gameBoard.toggleSquaresMarked(winningLineElements);
       } else if (
-        gameBoard.getSquares().at(2) === mark &&
-        gameBoard.getSquares().at(4) === mark &&
-        gameBoard.getSquares().at(6) === mark
+        gameBoard.getSquareMarks().at(2) === mark &&
+        gameBoard.getSquareMarks().at(4) === mark &&
+        gameBoard.getSquareMarks().at(6) === mark
       ) {
         win = true;
         winningLineElements = [
@@ -167,17 +168,15 @@ const gameController = (() => {
   };
 
   const isTie = () => {
+    // console.log(`isTie`);
     if (turn === 9) {
       return true;
     }
     return false;
   };
 
-  const isGameOver = () => {
-    // console.log('isGameOver');
-    return (
-      isWinningRow() || isWinningColumn() || isWinningDiagonal() || isTie()
-    );
+  const isWinner = () => {
+    return isWinningRow() || isWinningColumn() || isWinningDiagonal();
   };
 
   const endGame = () => {
@@ -210,13 +209,10 @@ const gameController = (() => {
   };
 
   const playTurn = (event) => {
-    // incrementTurn();
-    console.log(`turn: ${turn}`);
-    const mark = turn % 2 === 0 ? 'O' : 'X';
     const index = Array.from(squareElements).indexOf(event.target);
-    gameBoard.addMark(index, mark, event.target);
+    const mark = gameBoard.addMark(index);
 
-    if (isGameOver()) {
+    if (isWinner()) {
       console.log(`${mark} wins!`);
       endGame();
     } else if (isTie()) {
@@ -233,13 +229,13 @@ const gameController = (() => {
 })();
 
 const displayController = (() => {
+  const squareElements = Array.from(document.querySelectorAll('.square'));
+
   const render = () => {
-    // console.log('displayController.render');
     const squares = document.querySelectorAll('.square');
-    squares.forEach((element) => {
-      // console.log(`gameBoard.getSquares(): ${gameBoard.getSquares()}`);
+    squareElements.forEach((element) => {
       element.textContent =
-        gameBoard.getSquares()[Array.from(squares).indexOf(element)];
+        gameBoard.getSquareMarks()[Array.from(squareElements).indexOf(element)];
     });
   };
 
