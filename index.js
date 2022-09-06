@@ -1,5 +1,4 @@
 const gameBoard = (() => {
-  // const squares = ['X', 'X', 'X', 'O', 'O', 'O', 'X', 'X', 'X'];
   let squareMarks = [null, null, null, null, null, null, null, null, null];
 
   const getSquareMarks = () => squareMarks;
@@ -9,9 +8,7 @@ const gameBoard = (() => {
   };
 
   const reset = () => {
-    // console.log('reset');
     squareMarks = [null, null, null, null, null, null, null, null, null];
-    // console.log(`squares: ${squares}`);
   };
 
   const toggleSquaresMarked = (elementArray) => {
@@ -203,7 +200,6 @@ const gameController = (() => {
     console.log('removeListeners');
 
     squareElements.forEach((element) => {
-      // console.log(element);
       element.removeEventListener('click', playTurn);
     });
   };
@@ -212,7 +208,6 @@ const gameController = (() => {
     console.log('addListeners');
 
     squareElements.forEach((element) => {
-      // console.log(element);
       element.addEventListener('click', playTurn);
     });
 
@@ -233,8 +228,6 @@ const gameController = (() => {
       console.log(`${mark} wins!`);
       endGame();
       showWinner(mark);
-
-      // restartGame();
     } else if (isTie()) {
       console.log('Game is tied');
       endGame();
