@@ -15,6 +15,9 @@ const gameBoard = (() => {
   };
 
   const toggleSquaresMarked = (elementArray) => {
+    if (elementArray === []) {
+      return;
+    }
     elementArray.forEach((element) => {
       element.classList.toggle('marked');
     });
@@ -57,7 +60,6 @@ const gameController = (() => {
 
   const resetTurn = () => {
     turn = 0;
-    // winningLineElements = [];
   };
 
   const isWinningRow = () => {
@@ -168,8 +170,8 @@ const gameController = (() => {
   };
 
   const isTie = () => {
-    // console.log(`isTie`);
     if (turn === 9) {
+      winningLineElements = [];
       return true;
     }
     return false;
