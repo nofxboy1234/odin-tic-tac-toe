@@ -50,6 +50,10 @@ const gameController = (() => {
   const markSymbols = ['X', 'O'];
   const squareElements = Array.from(document.querySelectorAll('.square'));
   const restartButton = document.querySelector('#restart-game');
+  const winnerElement = document.querySelector('#winner');
+  const playerOneElement = document.querySelector('#player-one');
+  const playerTwoElement = document.querySelector('#player-two');
+
   let winningLineElements = [];
 
   const getTurn = () => turn;
@@ -172,7 +176,6 @@ const gameController = (() => {
 
   const isTie = () => {
     if (turn === 9) {
-      winningLineElements = [];
       return true;
     }
     return false;
@@ -189,11 +192,11 @@ const gameController = (() => {
   const restartGame = () => {
     gameBoard.reset();
     resetTurn();
-    setTimeout(() => {
-      displayController.render();
-      addListeners();
-      gameBoard.toggleSquaresMarked(winningLineElements);
-    }, 2000);
+    displayController.render();
+    addListeners();
+    gameBoard.toggleSquaresMarked(winningLineElements);
+    winningLineElements = [];
+    winnerElement.textContent = '';
   };
 
   const removeListeners = () => {
@@ -216,6 +219,12 @@ const gameController = (() => {
     restartButton.addEventListener('click', restartGame);
   };
 
+  const showWinner = (mark) => {
+    winnerElement.textContent =
+      mark === 'X' ? playerOneElement.value : playerTwoElement.value;
+    winnerElement.textContent += ' wins!';
+  };
+
   const playTurn = (event) => {
     const index = Array.from(squareElements).indexOf(event.target);
     const mark = gameBoard.addMark(index);
@@ -223,6 +232,8 @@ const gameController = (() => {
     if (isWinner()) {
       console.log(`${mark} wins!`);
       endGame();
+      showWinner(mark);
+
       // restartGame();
     } else if (isTie()) {
       console.log('Game is tied');
