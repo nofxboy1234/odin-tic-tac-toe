@@ -182,9 +182,12 @@ const gameController = (() => {
   };
 
   const endGame = () => {
+    removeListeners();
+  };
+
+  const restartGame = () => {
     gameBoard.reset();
     resetTurn();
-    removeListeners();
     setTimeout(() => {
       displayController.render();
       addListeners();
@@ -217,6 +220,7 @@ const gameController = (() => {
     if (isWinner()) {
       console.log(`${mark} wins!`);
       endGame();
+      // restartGame();
     } else if (isTie()) {
       console.log('Game is tied');
       endGame();
