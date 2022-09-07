@@ -64,32 +64,28 @@ const gameController = (() => {
     turn = 0;
   };
 
+  const range = (n) => [...Array(n).keys()];
+
   const isWinningRow = () => {
-    const wins = [
-      ['X', 'X', 'X'],
-      ['O', 'O', 'O'],
-    ];
+    const winLines = [Array(3).fill('X'), Array(3).fill('O')];
 
-    for (let index = 0; index < wins.length; index++) {
-      let marksRow = gameBoard.getSquareMarks().slice(0, 3);
-      if (marksRow.toString() === wins[index].toString()) {
-        winningLineElements = squareElements.slice(0, 3);
-        gameBoard.toggleSquaresMarked(winningLineElements);
-        return true;
-      }
+    let indices = range(3);
+    let marksRow;
 
-      marksRow = gameBoard.getSquareMarks().slice(3, 6);
-      if (marksRow.toString() === wins[index].toString()) {
-        winningLineElements = squareElements.slice(3, 6);
-        gameBoard.toggleSquaresMarked(winningLineElements);
-        return true;
-      }
+    for (let index = 0; index < winLines.length; index++) {
+      let line = winLines[index];
+      for (let index = 0; index < indices.length; index++) {
+        const element = indices[index];
+        let startIndex = element * 3;
+        let endIndex = startIndex + 3;
+        marksRow = gameBoard.getSquareMarks().slice(startIndex, endIndex);
 
-      marksRow = gameBoard.getSquareMarks().slice(6, 9);
-      if (marksRow.toString() === wins[index].toString()) {
-        winningLineElements = squareElements.slice(6, 9);
-        gameBoard.toggleSquaresMarked(winningLineElements);
-        return true;
+        if (marksRow.toString() === line.toString()) {
+          winningLineElements = squareElements.slice(startIndex, endIndex);
+          gameBoard.toggleSquaresMarked(winningLineElements);
+          console.log('winning row found');
+          return true;
+        }
       }
     }
     return false;
