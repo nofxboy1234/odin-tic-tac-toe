@@ -1,16 +1,16 @@
 'use strict';
 
 const gameBoard = (() => {
-  let squareMarks = Array(9).fill(null);
+  let _squareMarks = Array(9).fill(null);
 
-  const getSquareMarks = () => squareMarks;
+  const getSquareMarks = () => _squareMarks;
 
-  const isSquareTaken = (index) => {
-    return squareMarks[index] !== null;
+  const _isSquareTaken = (index) => {
+    return _squareMarks[index] !== null;
   };
 
   const reset = () => {
-    squareMarks = Array(9).fill(null);
+    _squareMarks = Array(9).fill(null);
   };
 
   const toggleWinningSquares = () => {
@@ -23,12 +23,12 @@ const gameBoard = (() => {
   };
 
   const addMark = (index) => {
-    if (isSquareTaken(index)) {
+    if (_isSquareTaken(index)) {
       return;
     }
     gameController.incrementTurn();
     const mark = gameController.getTurn() % 2 === 0 ? 'O' : 'X';
-    squareMarks[index] = mark;
+    _squareMarks[index] = mark;
     displayController.render();
 
     return mark;
@@ -43,27 +43,27 @@ const gameBoard = (() => {
 })();
 
 const gameController = (() => {
-  let turn = 0;
-  const squareElements = Array.from(document.querySelectorAll('.square'));
-  const restartButton = document.querySelector('#restart-game');
-  const winnerElement = document.querySelector('#winner');
-  const playerOneElement = document.querySelector('#player-one');
-  const playerTwoElement = document.querySelector('#player-two');
+  let _turn = 0;
+  const _squareElements = Array.from(document.querySelectorAll('.square'));
+  const _restartButton = document.querySelector('#restart-game');
+  const _winnerElement = document.querySelector('#winner');
+  const _playerOneElement = document.querySelector('#player-one');
+  const _playerTwoElement = document.querySelector('#player-two');
   let winningLineElements = ['a1'];
 
   const getWinningLineElements = () => winningLineElements;
 
-  const getTurn = () => turn;
+  const getTurn = () => _turn;
 
   const incrementTurn = () => {
-    turn += 1;
+    _turn += 1;
   };
 
-  const resetTurn = () => {
-    turn = 0;
+  const _resetTurn = () => {
+    _turn = 0;
   };
 
-  const calculateWinner = (squares) => {
+  const _calculateWinner = (squares) => {
     const lines = [
       [0, 1, 2],
       [3, 4, 5],
@@ -82,9 +82,9 @@ const gameController = (() => {
         squares[a] === squares[c]
       ) {
         winningLineElements = [
-          squareElements[a],
-          squareElements[b],
-          squareElements[c],
+          _squareElements[a],
+          _squareElements[b],
+          _squareElements[c],
         ];
         gameBoard.toggleWinningSquares();
         return true;
@@ -93,61 +93,61 @@ const gameController = (() => {
     return false;
   };
 
-  const isTie = () => {
-    if (turn === 9) {
+  const _isTie = () => {
+    if (_turn === 9) {
       return true;
     }
     return false;
   };
 
-  const isWinner = () => {
-    return calculateWinner(gameBoard.getSquareMarks());
+  const _isWinner = () => {
+    return _calculateWinner(gameBoard.getSquareMarks());
   };
 
-  const endGame = () => {
-    removeListeners();
+  const _endGame = () => {
+    _removeListeners();
   };
 
-  const restartGame = () => {
+  const _restartGame = () => {
     gameBoard.reset();
-    resetTurn();
+    _resetTurn();
     displayController.render();
     addListeners();
     gameBoard.toggleWinningSquares();
     winningLineElements = [];
-    winnerElement.textContent = '';
+    _winnerElement.textContent = '';
   };
 
-  const removeListeners = () => {
-    squareElements.forEach((element) => {
-      element.removeEventListener('click', playTurn);
+  const _removeListeners = () => {
+    _squareElements.forEach((element) => {
+      element.removeEventListener('click', _playTurn);
     });
   };
 
   const addListeners = () => {
-    squareElements.forEach((element) => {
-      element.addEventListener('click', playTurn);
+    _squareElements.forEach((element) => {
+      element.addEventListener('click', _playTurn);
     });
 
-    restartButton.addEventListener('click', restartGame);
+    _restartButton.addEventListener('click', _restartGame);
   };
 
-  const showWinner = (mark) => {
-    winnerElement.textContent =
-      mark === 'X' ? playerOneElement.value : playerTwoElement.value;
-    winnerElement.textContent += ' wins!';
+  const _showWinner = (mark) => {
+    _winnerElement.textContent =
+      mark === 'X' ? _playerOneElement.value : _playerTwoElement.value;
+    _winnerElement.textContent += ' wins!';
   };
 
-  const playTurn = (event) => {
-    const index = Array.from(squareElements).indexOf(event.target);
+  const _playTurn = (event) => {
+    const index = Array.from(_squareElements).indexOf(event.target);
     const mark = gameBoard.addMark(index);
 
-    if (isWinner()) {
-      endGame();
-      showWinner(mark);
-    } else if (isTie()) {
-      endGame();
-      winnerElement.textContent = 'Game is tied!';
+    if (_isWinner()) {
+      _endGame();
+      _showWinner(mark);
+    } else if (_isTie()) {
+      _endGame();
+      _winnerElement.textContent = 'Game is tied!';
     }
   };
 
@@ -160,13 +160,14 @@ const gameController = (() => {
 })();
 
 const displayController = (() => {
-  const squareElements = Array.from(document.querySelectorAll('.square'));
+  const _squareElements = Array.from(document.querySelectorAll('.square'));
 
   const render = () => {
-    const squares = document.querySelectorAll('.square');
-    squareElements.forEach((element) => {
+    _squareElements.forEach((element) => {
       element.textContent =
-        gameBoard.getSquareMarks()[Array.from(squareElements).indexOf(element)];
+        gameBoard.getSquareMarks()[
+          Array.from(_squareElements).indexOf(element)
+        ];
     });
   };
 
