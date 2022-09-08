@@ -14,7 +14,7 @@ const gameBoard = (() => {
   };
 
   const toggleWinningSquares = () => {
-    if (gameController.getWinningLineElements() === []) {
+    if (gameController.getWinningLineElements().length === 0) {
       return;
     }
     gameController.getWinningLineElements().forEach((element) => {
