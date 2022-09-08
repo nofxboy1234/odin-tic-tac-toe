@@ -22,10 +22,8 @@ const gameBoard = (() => {
 
   const addMark = (index) => {
     if (isSquareTaken(index)) {
-      console.log('Square is taken, returning');
       return;
     }
-    console.log('Marking square');
     gameController.incrementTurn();
     const mark = gameController.getTurn() % 2 === 0 ? 'O' : 'X';
     squareMarks[index] = mark;
@@ -57,7 +55,6 @@ const gameController = (() => {
 
   const incrementTurn = () => {
     turn += 1;
-    console.log(`turn: ${getTurn()}`);
   };
 
   const resetTurn = () => {
@@ -122,16 +119,12 @@ const gameController = (() => {
   };
 
   const removeListeners = () => {
-    console.log('removeListeners');
-
     squareElements.forEach((element) => {
       element.removeEventListener('click', playTurn);
     });
   };
 
   const addListeners = () => {
-    console.log('addListeners');
-
     squareElements.forEach((element) => {
       element.addEventListener('click', playTurn);
     });
@@ -150,11 +143,9 @@ const gameController = (() => {
     const mark = gameBoard.addMark(index);
 
     if (isWinner()) {
-      console.log(`${mark} wins!`);
       endGame();
       showWinner(mark);
     } else if (isTie()) {
-      console.log('Game is tied');
       endGame();
       winnerElement.textContent = 'Game is tied!';
     }
