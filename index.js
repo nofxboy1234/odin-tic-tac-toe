@@ -42,7 +42,6 @@ const gameBoard = (() => {
 
 const gameController = (() => {
   let turn = 0;
-  const markSymbols = ['X', 'O'];
   const squareElements = Array.from(document.querySelectorAll('.square'));
   const restartButton = document.querySelector('#restart-game');
   const winnerElement = document.querySelector('#winner');
@@ -60,8 +59,6 @@ const gameController = (() => {
   const resetTurn = () => {
     turn = 0;
   };
-
-  const range = (n) => [...Array(n).keys()];
 
   const calculateWinner = (squares) => {
     const lines = [
