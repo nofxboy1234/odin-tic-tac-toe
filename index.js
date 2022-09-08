@@ -64,6 +64,10 @@ const gameController = (() => {
   };
 
   const _calculateWinner = (squares) => {
+    /*
+    Winner calculation algorithm: 
+    https://reactjs.org/tutorial/tutorial.html#declaring-a-winner
+    */
     const lines = [
       [0, 1, 2],
       [3, 4, 5],
