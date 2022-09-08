@@ -1,3 +1,5 @@
+'use strict';
+
 const gameBoard = (() => {
   let squareMarks = Array(9).fill(null);
 
@@ -11,11 +13,11 @@ const gameBoard = (() => {
     squareMarks = Array(9).fill(null);
   };
 
-  const toggleSquaresMarked = (elementArray) => {
-    if (elementArray === []) {
+  const toggleWinningSquares = () => {
+    if (gameController.getWinningLineElements() === []) {
       return;
     }
-    elementArray.forEach((element) => {
+    gameController.getWinningLineElements().forEach((element) => {
       element.classList.toggle('marked');
     });
   };
@@ -36,7 +38,7 @@ const gameBoard = (() => {
     getSquareMarks,
     addMark,
     reset,
-    toggleSquaresMarked,
+    toggleWinningSquares,
   };
 })();
 
@@ -47,8 +49,9 @@ const gameController = (() => {
   const winnerElement = document.querySelector('#winner');
   const playerOneElement = document.querySelector('#player-one');
   const playerTwoElement = document.querySelector('#player-two');
+  let winningLineElements = ['a1'];
 
-  let winningLineElements = [];
+  const getWinningLineElements = () => winningLineElements;
 
   const getTurn = () => turn;
 
@@ -83,7 +86,7 @@ const gameController = (() => {
           squareElements[b],
           squareElements[c],
         ];
-        gameBoard.toggleSquaresMarked(winningLineElements);
+        gameBoard.toggleWinningSquares();
         return true;
       }
     }
@@ -110,7 +113,7 @@ const gameController = (() => {
     resetTurn();
     displayController.render();
     addListeners();
-    gameBoard.toggleSquaresMarked(winningLineElements);
+    gameBoard.toggleWinningSquares();
     winningLineElements = [];
     winnerElement.textContent = '';
   };
@@ -152,6 +155,7 @@ const gameController = (() => {
     getTurn,
     addListeners,
     incrementTurn,
+    getWinningLineElements,
   };
 })();
 
