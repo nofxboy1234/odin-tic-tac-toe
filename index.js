@@ -49,7 +49,7 @@ const gameController = (() => {
   const _winnerElement = document.querySelector('#winner');
   const _playerOneElement = document.querySelector('#player-one');
   const _playerTwoElement = document.querySelector('#player-two');
-  let winningLineElements = ['a1'];
+  let winningLineElements = [];
 
   const getWinningLineElements = () => winningLineElements;
 
